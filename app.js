@@ -1,6 +1,11 @@
 /* 1. expressモジュールをロードし、インスタンス化してappに代入。*/
 var express = require("express");
 var app = express();
+// socket.ioの読み込み
+var socketIO = require("socket.io");
+// サーバーでSocket.IOを使える状態にする
+var io = socketIO.listen(server);
+
 // View EngineにEJSを指定。
 app.set('view engine', 'ejs');
 
