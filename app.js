@@ -1,25 +1,41 @@
 var express = require('express');
+var fs = require('fs');
 var React = require('react');
 var ReactDOMServer = require('react-dom/server');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var ARTICLES_FILE = './articles.json'
 var POST = 3000;
 
 app.use(express.static('./public'));
-// View EngineにEJSを指定。
-app.set('view engine', 'ejs');
-
-//ルートディレクトリにアクセスした時に動く処理
-// app.get("/", function(req, res, next){
-//     res.render("index", {});
-// });
 
 // add top page routing
 app.get('/', function(req, res) {
   res.send('index.html');
 });
 
+app.get('/articles', function(req, res) {
+  var file = fs.readFileSync(ARTICLES_FILE);
+  res.json(JSON.parse(file));
+});
+
+app.post('/articles', function(req, res) {
+  var file = fs.readFileSync(ARTICLES_FILE);
+  var articles = JSON.parse(file);
+  var article = {
+    title: req.body.title,
+    comment: req.body.comment
+  };
+  articles.push(article);
+  fs.writeFile(ARTICLES_FILE, JSON.stringify(articles, null, 2));
+  res.json(articles);
+});
+
+app.get('/test', function(req, res) {
+  var testText = "testです";
+  res.send('index.html', testText);
+});
 
 //socket.ioに接続された時に動く処理
 // io.on('connection', function(socket) {

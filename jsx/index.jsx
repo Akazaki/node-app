@@ -1,12 +1,20 @@
 var React = require('react');
+var Router = require('react-router');
 var ReactDOM = require('react-dom');
+var request = require('superagent');
 
 var Index = React.createClass({
   render: function() {
     return (
-      <div className="index">
-        <h1>Hello React!</h1>
-      </div>
+      <p>aaaaaa!!</p>
+    );
+  }
+});
+
+var Test = React.createClass({
+  render: function() {
+    return (
+      <p>bbbbbb!!</p>
     );
   }
 });
