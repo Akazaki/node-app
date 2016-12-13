@@ -6,36 +6,34 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var ARTICLES_FILE = './articles.json'
+var bodyParser = require("body-parser");
 var POST = 3000;
+
+// req.body をパースしてオブジェクトにするミドルウェアを使う
+app.use(bodyParser.json());
 
 app.use(express.static('./public'));
 
+var players = [
+  { number: 10, name: "Kagawa" },
+  { number: 4, name: "Honda" },
+  { number: 5, name: "Nagatomo" },
+  { number: 9, name: "Okazaki" }
+];
+
+app.get("/api/players", function(req, res) {
+  res.send(players);
+});
+
 // add top page routing
-app.get('/', function(req, res) {
-  res.send('index.html');
-});
+// app.get('/', function(req, res) {
+//   res.send('index.html');
+// });
 
-app.get('/articles', function(req, res) {
-  var file = fs.readFileSync(ARTICLES_FILE);
-  res.json(JSON.parse(file));
-});
-
-app.post('/articles', function(req, res) {
-  var file = fs.readFileSync(ARTICLES_FILE);
-  var articles = JSON.parse(file);
-  var article = {
-    title: req.body.title,
-    comment: req.body.comment
-  };
-  articles.push(article);
-  fs.writeFile(ARTICLES_FILE, JSON.stringify(articles, null, 2));
-  res.json(articles);
-});
-
-app.get('/test', function(req, res) {
-  var testText = "testです";
-  res.send('index.html', testText);
-});
+// app.get('/test', function(req, res) {
+//   var testText = "testです";
+//   res.send('index.html', testText);
+// });
 
 //socket.ioに接続された時に動く処理
 // io.on('connection', function(socket) {
