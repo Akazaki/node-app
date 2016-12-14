@@ -1,23 +1,28 @@
-var React = require('react');
-var Router = require('react-router');
-var ReactDOM = require('react-dom');
-var request = require('superagent');
+import React from "react";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-var Index = React.createClass({
-  render: function() {
+class Index extends Component {
+  render() {
     return (
-      <p>aaaaaa!!</p>
+      <div>
+        <h1>ログインページです</h1>
+      </div>
     );
   }
-});
+}
 
-var Test = React.createClass({
-	entries(ctx) {
-    	return {
-			method: 'GET',
-			url: `../api/test`
-    	}
-	}
-});
+function mapStateToProps(state) {
+  return {
+  };
+}
 
-ReactDOM.render(<Test />, document.getElementById('root'));
+function mapDispatchToProps(dispatch) {
+  return {
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Index);

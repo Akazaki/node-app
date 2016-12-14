@@ -15,15 +15,21 @@ app.use(bodyParser.json());
 app.use(express.static('./public'));
 
 var players = [
-  { number: 10, name: "Kagawa" },
-  { number: 4, name: "Honda" },
-  { number: 5, name: "Nagatomo" },
-  { number: 9, name: "Okazaki" }
+  'test'
 ];
 
 app.get("/api/players", function(req, res) {
   res.send(players);
 });
+
+// テスト返す
+app.get("/api/test", function(req, res) {
+	res.send(players);
+});
+
+// app.get("/api/test", function(req, res) {
+//   res.send(players);
+// });
 
 // add top page routing
 // app.get('/', function(req, res) {
