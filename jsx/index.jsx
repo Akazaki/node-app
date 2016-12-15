@@ -42,7 +42,7 @@ function testResult(result) {
   return {
   	// state
     type: TEST,
-    test: result// 返値
+    test: result // 返値
   };
 }
 
@@ -50,7 +50,7 @@ function testResult(result) {
 function removeResult() {
   return {  
     type: DELETE,
-    test: []// 返値
+    test: [] // 返値
   };
 }
 
@@ -119,7 +119,6 @@ var Result = React.createClass({
 var _MyApp = React.createClass({
   reload: function() {
     this.props.dispatch(TestAPI());
-    console.log(this.props);
   },
 
   render: function() {
