@@ -28,7 +28,6 @@ var createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 // アクションを定義
 var START = "START";
 var TEST = "TEST";
-var DELETE = "DELETE";
 var ERROR = "ERROR";
 
 // プレーヤー一覧の取得開始を表すアクション
@@ -38,19 +37,19 @@ function startFetchPlayers() {
   };
 }
 
+// プレーヤー一覧の取得成功を表すアクション
+// function successFetchPlayers(result) {
+//   return {
+//     type: SUCCESS,
+//     players: result
+//   };
+// }
+
 function testResult(result) {
   return {
   	// state
     type: TEST,
-    test: result// 返値
-  };
-}
-
-// 削除
-function removeResult() {
-  return {  
-    type: DELETE,
-    test: []// 返値
+    aaa: result// 返値
   };
 }
 
@@ -72,12 +71,112 @@ function TestAPI() {
 	};
 }
 
-// 削除
-function removeList() {
-  return function(dispatch) {
-    dispatch(removeResult());
-  };
+// Web API を呼び出す非同期アクション
+// function fetchPlayersAsync() {
+//   return function(dispatch) {
+//     dispatch(startFetchPlayers());
+
+//     request.get("/api/players")
+//       .end(function(err, res) {
+//         if (err) {
+//           dispatch(errorFetchPlayers());
+//         } else {
+//           dispatch(successFetchPlayers(res.body));
+//         }
+//       });
+//   };
+// }
+
+// 状態を操作する Reducer
+function testReducer(state, action) {
+	switch (action.type) {
+		case TEST:
+			return action.aaa;
+		case ERROR:
+			return [];
+		default:
+			return state || [];
+	}
 }
+
+// プレーヤーの状態を操作する Reducer
+// function playersReducer(state, action) {
+//   switch (action.type) {
+//     case SUCCESS:
+//       return action.players;
+//     case ERROR:
+//       return [];
+//     default:
+//       return state || [];
+//   }
+// }
+
+// 進捗の状態を操作する Reducer
+// function progressReducer(state, action) {
+//   state = state || false;
+//   switch (action.type) {
+//     case START:
+//       return true;
+//     case SUCCESS:
+//       return false;
+//     case ERROR:
+//       return false;
+//     default:
+//       return state;
+//   }
+// }
+
+// プレーヤーの行を表示するコンポーネント
+// var Player = React.createClass({
+//   render: function() {
+//     return (
+//       <tr>
+//         <td>{this.props.player.number}</td>
+//         <td>{this.props.player.name}</td>
+//       </tr>
+//     );
+//   }
+// });
+
+// プレーヤー一覧を表示するコンポーネント
+// var Players = React.createClass({
+//   players: function() {
+//     return _.map(this.props.players, function(p) {
+//       return <Player player={p} />
+//     });
+//   },
+
+//   render: function() {
+//     return (
+//       <table>
+//         <thead>
+//           <tr>
+//             <th>Number</th>
+//             <th>Name</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {this.players()}
+//         </tbody>
+//       </table>
+//     );
+//   }
+// });
+
+// 進捗を表示するコンポーネント
+// var Progress = React.createClass({
+// 	render: function() {
+// 		if (this.props.progress) {
+// 			return (
+// 				<div>取得中...</div>
+// 			);
+// 		} else {
+// 			return (
+// 				<div></div>
+// 			);
+// 		}
+// 	}
+// });
 
 var Header = React.createClass({
   render: function () {
@@ -95,23 +194,17 @@ var Header = React.createClass({
 var Footer = React.createClass({
   render: function () {
     return (
-		  <p>Copy Right 2016</p>
+		<p>Copy Right 2016</p>
     );
   }
 });
 
+
 // 結果を表示するコンポーネント
 var Result = React.createClass({
-  remove: function() {
-    store.dispatch(removeList());
-  },
-
-  render: function() {
+	render: function() {
 		return (
-      <div className="result">
-		  	<p>{this.props.result}</p>
-        <button onClick={this.remove}>削除</button>
-      </div>
+			<p>{this.props.result}</p>
 		);
 	}
 });
@@ -119,7 +212,6 @@ var Result = React.createClass({
 var _MyApp = React.createClass({
   reload: function() {
     this.props.dispatch(TestAPI());
-    console.log(this.props);
   },
 
   render: function() {
@@ -136,32 +228,23 @@ var _MyApp = React.createClass({
 // <Progress progress={this.props.progress}/> 
 // <Players players={this.props.players}/>
 
-// 状態を操作する Reducer
-function testReducer(state, action) {
-  console.log(action.type);
-  switch (action.type) {
-    case TEST:
-      return action.test;
-    case DELETE:
-      return '';
-    case ERROR:
-      return [];
-    default:
-      return state || [];
-  }
-}
-
-// ストアに渡す Reducer を作成
-var rootReducer = combineReducers({
-  result: testReducer
-});
 
 // connect でラップし、ストアの状態を props に受け取れるようにする
 var MyApp = connect(function(state) {
   return {
+    // players: state.players,
+    // progress: state.progress,
     result: state.result
   };
 })(_MyApp);
+
+
+// ストアに渡す Reducer を作成
+var rootReducer = combineReducers({
+  // players: playersReducer,
+  // progress: progressReducer
+	result: testReducer
+});
 
 
 // ミドルウェアを組み込んだストアを作成
